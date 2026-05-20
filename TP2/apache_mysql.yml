@@ -1,0 +1,30 @@
+---
+- name: Installation apach2
+  hosts: all
+  remote_user: root
+ 
+  tasks:
+    - name: Installer le paquet web
+      apt:
+        update_cache: yes
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apache2
+        - mysql-server
+    - name: Gather the package facts
+      ansible.builtin.package_facts:
+        manager: auto
+ 
+    - name: Check whether a package called apache2 is installed
+      ansible.builtin.debug:
+        msg: "{{ ansible_facts.packages['apache2'] | length }} versions of apache2 are installed!"
+      when: "'apache2' in ansible_facts.packages"
+ 
+    - name: If package exist then update /var/www/html/index.html
+      lineinfile: 
+        path: /var/www/html/index.html
+        line: New line added
+        create: true
+      when: "'apache2' in ansible_facts.packages"
+

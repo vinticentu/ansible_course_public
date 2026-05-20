@@ -1,0 +1,11 @@
+# Playbook pour installer apache
+- name: install apache2
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: Install Apache
+    apt:
+      update_cache: yes
+      name: apache2
+      state: present
